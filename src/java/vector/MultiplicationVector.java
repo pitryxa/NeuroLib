@@ -19,7 +19,7 @@ public class MultiplicationVector extends Vector{
     }
 
     public Double get() {
-        return vector[size];
+        return vector[0];
     }
 
 }

@@ -22,4 +22,8 @@ public class ValidateVector {
     public boolean isSameSize(Vector aV, Vector bV) {
         return aV.size == bV.size;
     }
+
+    public boolean isValidRange(double start, double end) {
+        return start < end;
+    }
 }
