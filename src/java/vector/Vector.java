@@ -43,6 +43,10 @@ public class Vector implements Cloneable {
         return vector[index];
     }
 
+    public Double get() {
+        return vector[0];
+    }
+
     public void put(int index, Double data) {
         if (!validate.isIndexValid(index)) {
             throw new IllegalArgumentException("The index out of range.");

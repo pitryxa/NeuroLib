@@ -13,4 +13,6 @@ public abstract class ActivatingFunction {
         }
         return output;
     }
+
+    public abstract Double derivative(Double result);
 }

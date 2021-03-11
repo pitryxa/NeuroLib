@@ -17,9 +17,4 @@ public class MultiplicationVector extends Vector{
         }
         return new Double[]{sum};
     }
-
-    public Double get() {
-        return vector[0];
-    }
-
 }
