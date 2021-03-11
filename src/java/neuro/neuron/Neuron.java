@@ -1,20 +1,21 @@
-package neuro;
+package neuro.neuron;
 
 import neuro.activating.ActivatingFunction;
 import vector.MultiplicationVector;
+import vector.RandomVector;
 import vector.Vector;
 
+import java.util.Random;
+
 public abstract class Neuron {
-    protected int inputsAmount = 0;
     protected Vector weights = null;
     protected Double bias = null;
     protected Double output = null;
     protected ActivatingFunction activatingFunction = null;
 
-    public Neuron() {}
+    protected Neuron() {}
 
-    public Neuron(Vector weights, Double bias, ActivatingFunction activatingFunction) {
-        this.inputsAmount = weights.size();
+    protected Neuron(Vector weights, Double bias, ActivatingFunction activatingFunction) {
         this.weights = weights;
         this.bias = bias;
         this.activatingFunction = activatingFunction;
@@ -22,7 +23,6 @@ public abstract class Neuron {
 
     public Neuron setWeights(Vector weights) {
         this.weights = weights;
-        this.inputsAmount = weights.size();
         return this;
     }
 
@@ -51,8 +51,14 @@ public abstract class Neuron {
     protected boolean isValidNeuronState() {
         return
                 weights != null &&
-                inputsAmount == weights.size() &&
                 bias != null &&
                 activatingFunction != null;
+    }
+
+    public Neuron generate(int inputsAmount, ActivatingFunction activatingFunction) {
+        this.weights = new RandomVector(inputsAmount);
+        this.bias = new Random().nextDouble();
+        this.activatingFunction = activatingFunction;
+        return this;
     }
 }
