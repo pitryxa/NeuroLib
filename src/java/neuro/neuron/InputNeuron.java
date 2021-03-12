@@ -6,13 +6,17 @@ import vector.Vector;
 
 public class InputNeuron extends Neuron{
 
-    public InputNeuron(Double input) {
+    public InputNeuron() {
         super(
                 new Vector(new Double[]{1.}),
                 0.,
                 new SimpleLinear()
         );
-        activate(new Vector(new Double[]{input}));
+    }
+
+    public Double activate(Double input) {
+        this.output = input;
+        return output;
     }
 
     @Override

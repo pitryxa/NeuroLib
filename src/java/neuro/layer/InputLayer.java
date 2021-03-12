@@ -10,24 +10,31 @@ import java.util.List;
 
 public class InputLayer extends Layer{
 
-    public InputLayer(Vector inputs) {
-        int inputsAmount = inputs.size();
-        List<Neuron> neurons = new ArrayList<>(inputsAmount);
-        for (Double input : inputs.toArray()) {
-            neurons.add(new InputNeuron(input));
+    public InputLayer(int neuronsAmount) {
+        List<Neuron> neurons = new ArrayList<>(neuronsAmount);
+        for (int i = 0; i < neuronsAmount; i++) {
+            neurons.add(new InputNeuron());
         }
         this.neurons = neurons;
-        this.inputsAmount = inputsAmount;
-        this.outputsAmount = inputsAmount;
-        this.outputs = inputs;
+        this.outputsAmount = neuronsAmount;
+        this.inputsAmount = neuronsAmount;
     }
 
     @Override
     protected Neuron createNeuron(int inputsAmount, ActivatingFunction activatingFunction) {
-        return null;
+        return new InputNeuron();
     }
 
-    public Vector activate() {
+    @Override
+    public Vector activate(Vector inputs) {
+        int inputsSize = inputs.size();
+        if (inputsSize != inputsAmount) {
+            throw new IllegalArgumentException();
+        }
+        for (int i = 0; i < inputsSize; i++) {
+            ((InputNeuron) neurons.get(i)).activate(inputs.get(i));
+        }
+        outputs = inputs;
         return outputs;
     }
 }

@@ -41,6 +41,9 @@ public abstract class Layer {
     }
 
     public Layer generate(int neuronsAmount, int inputsAmount, ActivatingFunction activatingFunction){
+        if (neuronsAmount < 1 || inputsAmount < 1) {
+            throw new IllegalArgumentException();
+        }
         List<Neuron> neurons = new ArrayList<>(neuronsAmount);
         for (int i = 0; i < neuronsAmount; i++) {
             neurons.add(createNeuron(inputsAmount, activatingFunction));
