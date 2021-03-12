@@ -26,9 +26,17 @@ public abstract class Neuron {
         return this;
     }
 
+    public Vector getWeights() {
+        return weights;
+    }
+
     public Neuron setBias(Double bias) {
         this.bias = bias;
         return this;
+    }
+
+    public Double getBias() {
+        return bias;
     }
 
     public Neuron setActivatingFunction(ActivatingFunction activatingFunction) {
@@ -36,16 +44,24 @@ public abstract class Neuron {
         return this;
     }
 
-    public Double out() {
+    public ActivatingFunction getActivatingFunction() {
+        return activatingFunction;
+    }
+
+    public Double getOutput() {
         return output;
     }
 
-    public void activate(Vector input) {
+    public Double activate(Vector input) {
         if (!isValidNeuronState()) {
             throw new RuntimeException("Invalid state of the neuron.");
         }
+        if (input.size() != weights.size()) {
+            throw new IllegalArgumentException("The number of inputs must be equal the number of weights.");
+        }
         Vector dot = new MultiplicationVector(input, weights);
         this.output = activatingFunction.run(dot.get() + bias);
+        return output;
     }
 
     protected boolean isValidNeuronState() {
@@ -60,5 +76,9 @@ public abstract class Neuron {
         this.bias = new Random().nextDouble();
         this.activatingFunction = activatingFunction;
         return this;
+    }
+
+    public int getInputsAmount() {
+        return weights.size();
     }
 }
