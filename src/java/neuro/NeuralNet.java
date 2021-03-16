@@ -5,6 +5,7 @@ import neuro.layer.HiddenLayer;
 import neuro.layer.InputLayer;
 import neuro.layer.Layer;
 import neuro.layer.OutputLayer;
+import vector.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,11 @@ public class NeuralNet {
     protected List<Layer> hiddenLayers;
     protected Layer outputLayer;
 
+    protected Vector inputs;
+    protected Vector outputs;
+
     public NeuralNet(Layer inputLayer, List<Layer> hiddenLayers, Layer outputLayer) {
+        //TODO: to add validate layers
         this.inputLayer = inputLayer;
         this.hiddenLayers = hiddenLayers;
         this.outputLayer = outputLayer;
@@ -60,7 +65,7 @@ public class NeuralNet {
             List<Layer> layers = new ArrayList<>(hiddenLayersAmount);
             for (int i = 0; i < hiddenLayersAmount; i++) {
                 if (i == 0) {
-                    layers.add(new HiddenLayer().generate(inputsAmount, neuronsAmountInHiddenLayer, activatingFunction));
+                    layers.add(new HiddenLayer().generate(neuronsAmountInHiddenLayer, inputsAmount, activatingFunction));
                 } else {
                     layers.add(new HiddenLayer().generate(neuronsAmountInHiddenLayer, neuronsAmountInHiddenLayer, activatingFunction));
                 }
@@ -70,5 +75,25 @@ public class NeuralNet {
         }
         this.outputLayer = new OutputLayer().generate(outputsAmount, inputsAmountForOutputLayer, activatingFunction);
         return this;
+    }
+
+    public Vector activate(Vector inputs) {
+        if (!isNetInitialized()) {
+            throw new RuntimeException("The neural network is not initialized.");
+        }
+        if (inputs.size() != inputLayer.getInputsAmount()) {
+            throw new IllegalArgumentException();
+        }
+        this.inputs = inputs;
+        Vector dataBetweenLayers = inputLayer.activate(inputs);
+        for (Layer hidden : hiddenLayers) {
+            dataBetweenLayers = hidden.activate(dataBetweenLayers);
+        }
+        this.outputs = outputLayer.activate(dataBetweenLayers);
+        return outputs;
+    }
+
+    protected boolean isNetInitialized() {
+        return inputLayer != null && hiddenLayers != null && outputLayer != null;
     }
 }
