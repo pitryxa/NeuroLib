@@ -8,10 +8,12 @@ import vector.Vector;
 import java.util.Random;
 
 public abstract class Neuron {
+    protected Vector inputs = null;
     protected Vector weights = null;
     protected Double bias = null;
     protected Double output = null;
     protected ActivatingFunction activatingFunction = null;
+    protected Double delta;
 
     protected Neuron() {}
 
@@ -59,6 +61,7 @@ public abstract class Neuron {
         if (input.size() != weights.size()) {
             throw new IllegalArgumentException("The number of inputs must be equal the number of weights.");
         }
+        this.inputs = input;
         Vector dot = new MultiplicationVector(input, weights);
         this.output = activatingFunction.run(dot.get() + bias);
         return output;
