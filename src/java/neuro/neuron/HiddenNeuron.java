@@ -15,10 +15,8 @@ public class HiddenNeuron extends Neuron{
     public HiddenNeuron() {
     }
 
-    public void train(Vector deltasPrevLayer, Vector weightsPrevLayer, Double learnRate, Double moment) {
+    public Double calcDelta(Vector deltasPrevLayer, Vector weightsPrevLayer) {
         this.delta = activatingFunction.derivative(output) * new MultiplicationVector(weightsPrevLayer, deltasPrevLayer).get();
-        this.deltaWeights = calcDeltaWeights(learnRate, moment);
-        this.weights = updateWeights();
-        this.bias = updateBias(learnRate, moment);
+        return delta;
     }
 }

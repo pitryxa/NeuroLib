@@ -81,6 +81,7 @@ public abstract class Neuron {
 
     public Neuron generate(int inputsAmount, ActivatingFunction activatingFunction) {
         this.weights = new RandomVector(inputsAmount);
+        this.deltaWeights = new ZeroVector(inputsAmount);
         this.bias = new Random().nextDouble();
         this.activatingFunction = activatingFunction;
         return this;
@@ -108,5 +109,11 @@ public abstract class Neuron {
     protected Double updateBias(Double learnRate, Double moment) {
         this.deltaBias = delta * learnRate + deltaBias * moment;
         return bias + deltaBias;
+    }
+
+    public void update(Double learnRate, Double moment) {
+        this.deltaWeights = calcDeltaWeights(learnRate, moment);
+        this.weights = updateWeights();
+        this.bias = updateBias(learnRate, moment);
     }
 }

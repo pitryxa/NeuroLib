@@ -2,6 +2,7 @@ package neuro.layer;
 
 import neuro.activating.ActivatingFunction;
 import neuro.neuron.Neuron;
+import neuro.neuron.OutputNeuron;
 import vector.Vector;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public abstract class Layer {
     protected Vector outputs = null;
     protected int outputsAmount = 0;
     protected int inputsAmount = 0;
+    protected Vector deltas = null;
 
     protected ValidateLayer validate = new ValidateLayer();
 
@@ -67,6 +69,22 @@ public abstract class Layer {
         }
         this.outputs = outputs;
         return outputs;
+    }
+
+    public List<Vector> getWeightsByInputs() {
+        List<Vector> weightsByInputs = new ArrayList<>(inputsAmount);
+        for (int i = 0; i < inputsAmount; i++) {
+            Vector weightsToInput = new Vector(outputsAmount);
+            for (int j = 0; j < outputsAmount; j++) {
+                weightsToInput.put(j, neurons.get(j).getWeights().get(i));
+            }
+            weightsByInputs.add(weightsToInput);
+        }
+        return weightsByInputs;
+    }
+
+    public void update(Double learnRate, Double moment) {
+        neurons.forEach(n -> n.update(learnRate, moment));
     }
 
     protected abstract Neuron createNeuron(int inputsAmount, ActivatingFunction activatingFunction);

@@ -19,7 +19,7 @@ public class NeuralNet {
     protected Vector outputs;
 
     public NeuralNet(Layer inputLayer, List<Layer> hiddenLayers, Layer outputLayer) {
-        //TODO: to add validate layers
+        //TODO: need to add validate layers
         this.inputLayer = inputLayer;
         this.hiddenLayers = hiddenLayers;
         this.outputLayer = outputLayer;
@@ -91,6 +91,23 @@ public class NeuralNet {
         }
         this.outputs = outputLayer.activate(dataBetweenLayers);
         return outputs;
+    }
+
+    protected void calcDelta(Vector outputIdeal) {
+        Vector delta = ((OutputLayer) outputLayer).calcDeltas(outputIdeal);
+        List<Vector> weights = outputLayer.getWeightsByInputs();
+        for (int i = hiddenLayers.size() - 1; i >= 0; i--) {
+            HiddenLayer hiddenLayer = (HiddenLayer) hiddenLayers.get(i);
+            delta = hiddenLayer.calcDeltas(delta, weights);
+            weights = hiddenLayer.getWeightsByInputs();
+        }
+    }
+
+    public void train(Double learnRate, Double moment, Vector trainInput, Vector outputIdeal) {
+        activate(trainInput);
+        calcDelta(outputIdeal);
+        outputLayer.update(learnRate, moment);
+        hiddenLayers.forEach(h -> h.update(learnRate, moment));
     }
 
     protected boolean isNetInitialized() {
