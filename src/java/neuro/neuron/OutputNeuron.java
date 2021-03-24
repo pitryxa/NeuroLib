@@ -13,11 +13,11 @@ public class OutputNeuron extends Neuron {
         super(weights, bias, activatingFunction);
     }
 
-    protected void train(Double outputIdeal, Double learnRate) {
+    public void train(Double outputIdeal, Double learnRate, Double moment) {
         this.delta = activatingFunction.derivative(output) * (outputIdeal - output);
-
-        Vector deltaWeights = new ScalarMultiplicationVector(inputs, delta * learnRate);
-        this.weights = new AdditionVector(weights, deltaWeights);
+        this.deltaWeights = calcDeltaWeights(learnRate, moment);
+        this.weights = updateWeights();
+        this.bias = updateBias(learnRate, moment);
     }
 
 

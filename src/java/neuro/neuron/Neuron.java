@@ -1,9 +1,7 @@
 package neuro.neuron;
 
 import neuro.activating.ActivatingFunction;
-import vector.MultiplicationVector;
-import vector.RandomVector;
-import vector.Vector;
+import vector.*;
 
 import java.util.Random;
 
@@ -14,6 +12,8 @@ public abstract class Neuron {
     protected Double output = null;
     protected ActivatingFunction activatingFunction = null;
     protected Double delta;
+    protected Vector deltaWeights = null;
+    protected Double deltaBias = 0.0;
 
     protected Neuron() {}
 
@@ -21,10 +21,15 @@ public abstract class Neuron {
         this.weights = weights;
         this.bias = bias;
         this.activatingFunction = activatingFunction;
+        this.deltaWeights = new ZeroVector(weights.size());
     }
 
     public Neuron setWeights(Vector weights) {
+        if (weights.size() != this.weights.size()) {
+            throw new IllegalArgumentException("The size of the input weights must be equal count of the inputs of the neuron.");
+        }
         this.weights = weights;
+        this.deltaWeights = new ZeroVector(weights.size());
         return this;
     }
 
@@ -83,5 +88,25 @@ public abstract class Neuron {
 
     public int getInputsAmount() {
         return weights.size();
+    }
+
+    public Double getDelta() {
+        return delta;
+    }
+
+    protected Vector calcDeltaWeights(Double learnRate, Double moment) {
+        return new AdditionVector(
+                new ScalarMultiplicationVector(inputs, delta * learnRate),
+                new ScalarMultiplicationVector(deltaWeights, moment)
+        );
+    }
+
+    protected Vector updateWeights() {
+        return new AdditionVector(weights, deltaWeights);
+    }
+
+    protected Double updateBias(Double learnRate, Double moment) {
+        this.deltaBias = delta * learnRate + deltaBias * moment;
+        return bias + deltaBias;
     }
 }
